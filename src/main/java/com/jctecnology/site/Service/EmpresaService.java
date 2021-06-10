@@ -24,6 +24,7 @@ public class EmpresaService {
                 empresaDTO.getRazao(),
                 empresaDTO.getCnpj(),
                 empresaDTO.getStatus(),
+                empresaDTO.getEmail(),
                 empresaDTO.getTelefone(),
                 empresaDTO.getCargo());
         Usuario usuarioCriado = usuarioService.criarUsuario(usuario);
