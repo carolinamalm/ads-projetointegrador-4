@@ -6,24 +6,26 @@
 package com.jctecnology.site.Model;
 
 public class Empresa {
-    String Nome, Razao, Cnpj, Status, Telefone, Cargo;
+    String Nome, Razao, Cnpj, Status, Email, Telefone, Cargo;
     Integer Id;
     Usuario User;
 
-    public Empresa(String Nome, String Razao, String Cnpj, String Status, String Telefone, String Cargo) {
+    public Empresa(String Nome, String Razao, String Cnpj, String Status, String Email, String Telefone, String Cargo) {
         this.Nome = Nome;
         this.Razao = Razao;
         this.Cnpj = Cnpj;
         this.Status = Status;
+        this.Email = Email;
         this.Telefone = Telefone;
         this.Cargo = Cargo;
     }
 
-    public Empresa(String Nome, String Razao, String Cnpj, String Status, String Telefone, String Cargo, Integer Id, Usuario User) {
+    public Empresa(String Nome, String Razao, String Cnpj, String Status, String Email, String Telefone, String Cargo, Integer Id, Usuario User) {
         this.Nome = Nome;
         this.Razao = Razao;
         this.Cnpj = Cnpj;
-        this.Status = Status;
+        this.Status = Status;        
+        this.Email = Email;
         this.Telefone = Telefone;
         this.Cargo = Cargo;
         this.Id = Id;
@@ -61,6 +63,15 @@ public class Empresa {
     public void setStatus(String Status) {
         this.Status = Status;
     }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String Email) {
+        this.Email = Email;
+    }
+    
 
     public String getTelefone() {
         return Telefone;

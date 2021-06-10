@@ -30,9 +30,9 @@ public class ColaboradorDao {
             while (rs.next()) {
                 colab.setId(rs.getInt("colab_id"));
                 colab.setNome(rs.getString("colab_nome"));
-                colab.setNome(rs.getString("colab_cpf"));
-                colab.setNome(rs.getString("colab_email"));
-                colab.setNome(rs.getString("colab_telefone"));
+                colab.setCpf(rs.getString("colab_cpf"));
+                colab.setEmail(rs.getString("colab_email"));
+                colab.setTelefone(rs.getString("colab_telefone"));
                 resul.add(colab);
             }
         }
@@ -54,9 +54,9 @@ public class ColaboradorDao {
                 if (rs.next()) {
                 colab.setId(rs.getInt("colab_id"));
                 colab.setNome(rs.getString("colab_nome"));
-                colab.setNome(rs.getString("colab_cpf"));
-                colab.setNome(rs.getString("colab_email"));
-                colab.setNome(rs.getString("colab_telefone"));
+                colab.setCpf(rs.getString("colab_cpf"));
+                colab.setEmail(rs.getString("colab_email"));
+                colab.setTelefone(rs.getString("colab_telefone"));
                 }
             }catch (SQLException e) {
                 conn.rollback();

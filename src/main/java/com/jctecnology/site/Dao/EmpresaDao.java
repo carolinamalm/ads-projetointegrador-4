@@ -32,12 +32,13 @@ public class EmpresaDao {
             while (rs.next()) {
                 emp.setId(rs.getInt("emp_id"));
                 emp.setNome(rs.getString("emp_nome"));
-                emp.setNome(rs.getString("emp_cnpj"));
-                emp.setNome(rs.getString("emp_razao"));
-                emp.setNome(rs.getString("emp_status"));
-                emp.setNome(rs.getString("emp_telefone"));
-                emp.setNome(rs.getString("emp_cargo"));
-                emp.setNome(rs.getString("emp_usu_id"));
+                emp.setCnpj(rs.getString("emp_cnpj"));
+                emp.setRazao(rs.getString("emp_razao"));
+                emp.setStatus(rs.getString("emp_status"));
+                emp.setEmail(rs.getString("emp_email"));
+                emp.setTelefone(rs.getString("emp_telefone"));
+                emp.setCargo(rs.getString("emp_cargo"));
+                user.setId(rs.getInt("emp_usu_id"));
                 resul.add(emp);
             }
         }
@@ -45,7 +46,7 @@ public class EmpresaDao {
     }
      
     public Empresa procurarEmpresa(Empresa emp, String login) throws SQLException {
-        String sql = "SELECT emp_id, emp_nome, emp_cnpj, emp_razao, emp_status, emp_telefone, emp_cargo FROM Empresa, Usuario WHERE usu_login=? and usu_id=emp_usu_id; ";
+        String sql = "SELECT emp_id, emp_nome, emp_cnpj, emp_razao, emp_status, emp_email, emp_telefone, emp_cargo FROM Empresa, Usuario WHERE usu_login=? and usu_id=emp_usu_id; ";
         Connection conn = null;
         
         try {
@@ -59,11 +60,12 @@ public class EmpresaDao {
                 if (rs.next()) {
                 emp.setId(rs.getInt("emp_id"));
                 emp.setNome(rs.getString("emp_nome"));
-                emp.setNome(rs.getString("emp_cnpj"));
-                emp.setNome(rs.getString("emp_razao"));
-                emp.setNome(rs.getString("emp_status"));
-                emp.setNome(rs.getString("emp_telefone"));
-                emp.setNome(rs.getString("emp_cargo"));
+                emp.setCnpj(rs.getString("emp_cnpj"));
+                emp.setRazao(rs.getString("emp_razao"));
+                emp.setStatus(rs.getString("emp_status"));
+                emp.setEmail(rs.getString("emp_email"));
+                emp.setTelefone(rs.getString("emp_telefone"));
+                emp.setCargo(rs.getString("emp_cargo"));
                 }
             }catch (SQLException e) {
                 conn.rollback();
@@ -72,7 +74,7 @@ public class EmpresaDao {
     }
    
     public void inserirEmpresa(Empresa emp, Usuario user) throws SQLException {
-        String sql = "INSERT INTO Empresa ( emp_nome, emp_cnpj, emp_razao, emp_status, emp_telefone, emp_cargo, emp_usu_id) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Empresa ( emp_nome, emp_cnpj, emp_razao, emp_status, emp_email, emp_telefone, emp_cargo, emp_usu_id) VALUES (?,?,?,?,?,?,?,?)";
         Connection conn = null;
         try  {
             conn = connectionMySql.obterConexao();
@@ -85,9 +87,10 @@ public class EmpresaDao {
             stmt.setString(2, emp.getCnpj());
             stmt.setString(3, emp.getRazao());
             stmt.setString(4, emp.getStatus());
-            stmt.setString(5, emp.getTelefone());
-            stmt.setString(6, emp.getCargo());
-            stmt.setInt(7, user.getId());
+            stmt.setString(5, emp.getEmail());
+            stmt.setString(6, emp.getTelefone());
+            stmt.setString(7, emp.getCargo());
+            stmt.setInt(8, user.getId());
             boolean resul = stmt.execute();
 
             ResultSet rs = stmt.getGeneratedKeys(); // RECUPERA O ID GERADO PARA O INFO NOVO
@@ -105,7 +108,7 @@ public class EmpresaDao {
     }
     
     public void atualizarEmpresa(Empresa emp) throws SQLException {        
-        String sql = "UPDATE Empresa set emp_nome=?, emp_cnpj=?, emp_razao=?, emp_status=?, emp_telefone=?, emp_cargo=? where emp_id=?";
+        String sql = "UPDATE Empresa set emp_nome=?, emp_cnpj=?, emp_razao=?, emp_status=?, emp_email=?, emp_telefone=?, emp_cargo=? where emp_id=?";
         try (Connection conn = connectionMySql.obterConexao()) {
             // DESLIGAR AUTO-COMMIT -> POSSIBILITAR DESFAZER OPERACOES EM CASOS DE ERROS
             conn.setAutoCommit(false);
@@ -115,9 +118,10 @@ public class EmpresaDao {
                 stmt.setString(2, emp.getCnpj());
                 stmt.setString(3, emp.getRazao());
                 stmt.setString(4, emp.getStatus());
-                stmt.setString(5, emp.getTelefone());
-                stmt.setString(6, emp.getCargo());
-                stmt.setString(7, String.valueOf(emp.getId()));
+                stmt.setString(5, emp.getEmail());
+                stmt.setString(6, emp.getTelefone());
+                stmt.setString(7, emp.getCargo());
+                stmt.setString(8, String.valueOf(emp.getId()));
                 
                 int resul = stmt.executeUpdate();
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
