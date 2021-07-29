@@ -1,12 +1,12 @@
 package com.jctecnology.site.Dto;
 
 public class EmpresaDTO {
-    private String nome, razao, cnpj, status, email, telefone, cargo, senha;
+    private String nome, razao, cnpj, status, email, telefone, cargo, senha,numFuncionarios, plano,observacoes;
 
     public EmpresaDTO() {
     }
 
-    public EmpresaDTO(String nome, String razao, String cnpj, String status, String email, String telefone, String cargo, String senha) {
+    public EmpresaDTO(String nome, String razao, String cnpj, String status, String email, String telefone, String cargo, String senha, String numFuncionarios, String plano, String observacoes) {
         this.nome = nome;
         this.razao = razao;
         this.cnpj = cnpj;
@@ -15,6 +15,9 @@ public class EmpresaDTO {
         this.telefone = telefone;
         this.cargo = cargo;
         this.senha = senha;
+        this.numFuncionarios = numFuncionarios;
+        this.plano = plano;
+        this.observacoes = observacoes;
     }
 
     public String getNome() {
@@ -79,5 +82,29 @@ public class EmpresaDTO {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getNumFuncionarios() {
+        return numFuncionarios;
+    }
+
+    public void setNumFuncionarios(String numFuncionarios) {
+        this.numFuncionarios = numFuncionarios;
+    }
+
+    public String getPlano() {
+        return plano;
+    }
+
+    public void setPlano(String plano) {
+        this.plano = plano;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 }

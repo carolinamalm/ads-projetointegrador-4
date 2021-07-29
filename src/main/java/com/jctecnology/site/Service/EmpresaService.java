@@ -17,7 +17,7 @@ public class EmpresaService {
     @Autowired
     private UsuarioService usuarioService;
 
-    public void criarEmpresa(EmpresaDTO empresaDTO) throws SQLException {
+    public Empresa criarEmpresa(EmpresaDTO empresaDTO) throws SQLException {
         Usuario usuario = new Usuario(empresaDTO.getEmail(), empresaDTO.getSenha());
         Empresa empresa = new Empresa(
                 empresaDTO.getNome(),
@@ -28,6 +28,8 @@ public class EmpresaService {
                 empresaDTO.getTelefone(),
                 empresaDTO.getCargo());
         Usuario usuarioCriado = usuarioService.criarUsuario(usuario);
-        empresaDao.inserirEmpresa(empresa, usuarioCriado);
+        return empresaDao.inserirEmpresa(empresa, usuarioCriado);
+
+
     }
 }

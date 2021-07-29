@@ -9,44 +9,43 @@ package com.jctecnology.site.Dao;
 
 import com.jctecnology.site.ConnectionBD.ConnectionMySql;
 import com.jctecnology.site.Model.Empresa;
+import com.jctecnology.site.Model.Orcamento;
 import com.jctecnology.site.Model.Usuario;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class EmpresaDao {
+public class OrcamentoDao {
     
+    Orcamento orcamento;
     Empresa emp;
-    Usuario user;
     ConnectionMySql connectionMySql = new ConnectionMySql();
 
-    public List<Empresa> findAll() throws SQLException {
-        String sql = "SELECT * FROM Empresa";
-        List<Empresa> resul = new ArrayList<>();
+    public List<Orcamento> findAll() throws SQLException {
+        String sql = "SELECT * FROM Orcamento";
+        List<Orcamento> resul = new ArrayList<>();
 
         try (Connection conn = connectionMySql.obterConexao();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                emp.setId(rs.getInt("emp_id"));
-                emp.setNome(rs.getString("emp_nome"));
-                emp.setCnpj(rs.getString("emp_cnpj"));
-                emp.setRazao(rs.getString("emp_razao"));
-                emp.setStatus(rs.getString("emp_status"));
-                emp.setEmail(rs.getString("emp_email"));
-                emp.setTelefone(rs.getString("emp_telefone"));
-                emp.setCargo(rs.getString("emp_cargo"));
-                user.setId(rs.getInt("emp_usu_id"));
-                resul.add(emp);
+                orcamento.setId(rs.getInt("orc_id"));
+                orcamento.setNumFuncionarios(rs.getInt("orc_numFuncionario"));
+                orcamento.setObservacoes(rs.getString("orc_observacoes"));
+                orcamento.setPlano(rs.getString("orc_plano"));
+                emp.setId(rs.getInt("orc_emp_id"));
+                orcamento.setEmpresa(emp);
+                resul.add(orcamento);
             }
         }
         return resul;
     }
      
-    public Empresa procurarEmpresa(Empresa emp, String login) throws SQLException {
-        String sql = "SELECT emp_id, emp_nome, emp_cnpj, emp_razao, emp_status, emp_email, emp_telefone, emp_cargo FROM Empresa, Usuario WHERE usu_login=? and usu_id=emp_usu_id; ";
+    public Orcamento procurarOrcamento(Orcamento orcamento) throws SQLException {
+        String sql = "SELECT * FROM Orcamento WHERE orc_emp_id=?;";
         Connection conn = null;
         
         try {
@@ -54,27 +53,24 @@ public class EmpresaDao {
             conn.setAutoCommit(false);      
             
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, login);            
+            stmt.setInt(1, orcamento.getEmpresa().getId());
             ResultSet rs = stmt.executeQuery();
             
                 if (rs.next()) {
-                emp.setId(rs.getInt("emp_id"));
-                emp.setNome(rs.getString("emp_nome"));
-                emp.setCnpj(rs.getString("emp_cnpj"));
-                emp.setRazao(rs.getString("emp_razao"));
-                emp.setStatus(rs.getString("emp_status"));
-                emp.setEmail(rs.getString("emp_email"));
-                emp.setTelefone(rs.getString("emp_telefone"));
-                emp.setCargo(rs.getString("emp_cargo"));
+                    orcamento.setId(rs.getInt("orc_id"));
+                    orcamento.setNumFuncionarios(rs.getInt("orc_numFuncionarios"));
+                    orcamento.setObservacoes(rs.getString("orc_observacoes"));
+                    orcamento.setPlano(rs.getString("orc_plano"));
+                    orcamento.getEmpresa().setId(rs.getInt("orc_emp_id"));
                 }
             }catch (SQLException e) {
                 conn.rollback();
             }
-        return emp;
+        return orcamento;
     }
    
-    public Empresa inserirEmpresa(Empresa emp, Usuario user) throws SQLException {
-        String sql = "INSERT INTO Empresa ( emp_nome, emp_cnpj, emp_razao, emp_status, emp_email, emp_telefone, emp_cargo, emp_usu_id) VALUES (?,?,?,?,?,?,?,?)";
+    public void inserirOrcamento(Orcamento orcamento) throws SQLException {
+        String sql = "INSERT INTO Orcamento ( orc_numFuncionarios, orc_observacoes, orc_plano, orc_emp_id) VALUES (?,?,?,?)";
         Connection conn = null;
         try  {
             conn = connectionMySql.obterConexao();
@@ -83,52 +79,44 @@ public class EmpresaDao {
 
             // ADICIONAR O Statement.RETURN_GENERATED_KEYS PARA RECUPERAR O ID GERADO NO BD
             PreparedStatement stmt =   conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, emp.getNome());
-            stmt.setString(2, emp.getCnpj());
-            stmt.setString(3, emp.getRazao());
-            stmt.setString(4, emp.getStatus());
-            stmt.setString(5, emp.getEmail());
-            stmt.setString(6, emp.getTelefone());
-            stmt.setString(7, emp.getCargo());
-            stmt.setInt(8, user.getId());
+            stmt.setInt(1, orcamento.getNumFuncionarios());
+            stmt.setString(2, orcamento.getObservacoes());
+            stmt.setString(3, orcamento.getPlano());
+            stmt.setInt(4, orcamento.getEmpresa().getId());
             boolean resul = stmt.execute();
 
             ResultSet rs = stmt.getGeneratedKeys(); // RECUPERA O ID GERADO PARA O INFO NOVO
             while (rs.next()) {
                 Integer idGerado = rs.getInt(1);
-                emp.setId(idGerado);
+                orcamento.setId(idGerado);
             }
 
             conn.commit();
-            return emp;
+
         } catch (SQLException e) {
             conn.rollback();
-            return null;
+            
         }
     }
     
-    public void atualizarEmpresa(Empresa emp) throws SQLException {        
-        String sql = "UPDATE Empresa set emp_nome=?, emp_cnpj=?, emp_razao=?, emp_status=?, emp_email=?, emp_telefone=?, emp_cargo=? where emp_id=?";
+    public void atualizarOrcamento(Orcamento orcamento) throws SQLException {
+        String sql = "UPDATE Empresa set orc_numFuncionarios=?, orc_observacoes=?, orc_plano=?, orc_emp_id=?, where orc_id=?";
         try (Connection conn = connectionMySql.obterConexao()) {
             // DESLIGAR AUTO-COMMIT -> POSSIBILITAR DESFAZER OPERACOES EM CASOS DE ERROS
             conn.setAutoCommit(false);
             // ADICIONAR O Statement.RETURN_GENERATED_KEYS PARA RECUPERAR O ID GERADO NO BD
             try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, emp.getNome());
-                stmt.setString(2, emp.getCnpj());
-                stmt.setString(3, emp.getRazao());
-                stmt.setString(4, emp.getStatus());
-                stmt.setString(5, emp.getEmail());
-                stmt.setString(6, emp.getTelefone());
-                stmt.setString(7, emp.getCargo());
-                stmt.setString(8, String.valueOf(emp.getId()));
-                
+                stmt.setInt(1, orcamento.getNumFuncionarios());
+                stmt.setString(2, orcamento.getObservacoes());
+                stmt.setString(3, orcamento.getPlano());
+                stmt.setInt(4, orcamento.getEmpresa().getId());
+                stmt.setInt(5, orcamento.getId());
                 int resul = stmt.executeUpdate();
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     // RECUPERA O ID GERADO PARA O INFO NOVO
                     while (rs.next()) {
                         Integer idGerado = rs.getInt(3);
-                        emp.setId(idGerado);
+                        orcamento.setId(idGerado);
                     }
                 }
                 conn.commit();
@@ -138,20 +126,20 @@ public class EmpresaDao {
             }
         }
     }
-     public void deletarEmpresa(Empresa emp) throws SQLException {
-        String sql = "DELETE * FROM Empresa WHERE emp_id=?";
+     public void deletarOrcamento(Orcamento orcamento) throws SQLException {
+        String sql = "DELETE * FROM Orcamento WHERE orc_id=?";
         try (Connection conn = connectionMySql.obterConexao()) {
             // DESLIGAR AUTO-COMMIT -> POSSIBILITAR DESFAZER OPERACOES EM CASOS DE ERROS
             conn.setAutoCommit(false);
             // ADICIONAR O Statement.RETURN_GENERATED_KEYS PARA RECUPERAR O ID GERADO NO BD
             try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, String.valueOf(emp.getId()));
+                stmt.setString(1, String.valueOf(orcamento.getId()));
                 int resul = stmt.executeUpdate();
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     // RECUPERA O ID GERADO PARA O INFO NOVO
                     while (rs.next()) {
                         Integer idGerado = rs.getInt(1);
-                        emp.setId(idGerado);
+                        orcamento.setId(idGerado);
                     }
                 }
                 conn.commit();
