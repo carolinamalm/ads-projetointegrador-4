@@ -16,6 +16,25 @@
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
+        <developers>
+            <developer>
+                <name>CAROLINA MARIA DE ALMEIDA</name>
+                <email>carolpsg18@gmail.com</email>
+                <id>Carolinamalm</id>
+            </developer>
+            
+            <developer>
+                <name>JEFFERSON ALVES DO OURO</name>
+                <email>jeffersonouro@hotmail.com</email>
+                <id>JeffersonOuro</id>
+            </developer>
+            
+            <developer>
+                <name>Thalita Almeida Ferreira</name>
+                <email>athalita013@gmail.com</email>
+                <id>Talmeida0</id>
+            </developer>
+        </developers>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
